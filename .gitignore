@@ -1,4 +1,3 @@
-# === 1. Python 编译垃圾 (必须忽略) ===
 __pycache__/
 *.pyc
 *.pyo
@@ -9,10 +8,7 @@ venv/
 .env
 .venv
 
-# === 2. 数据文件 (核心！绝对不能上传) ===
-# 忽略 data 文件夹下的所有内容
 data/
-# 即使不在 data 目录下，也忽略常见的庞大格式
 *.csv
 *.xlsx
 *.tar.gz
@@ -20,19 +16,14 @@ data/
 *.pkl
 *.h5
 
-# === 3. 生成的图片和结果 ===
-# 如果你想让 GitHub 保持干净，只放代码，不放结果
 figures/
 results/
 *.png
 *.jpg
 *.svg
 
-# === 4. 系统文件 (Mac/Windows) ===
 .DS_Store
 Thumbs.db
 
-# === 5. 编辑器配置 (可选) ===
-# 如果不想把你的 VS Code 配置传上去
 .vscode/
 .idea/
