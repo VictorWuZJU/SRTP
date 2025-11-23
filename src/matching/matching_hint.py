@@ -9,23 +9,13 @@ from sklearn.preprocessing import StandardScaler
 from lightgbm import LGBMClassifier
 from pathlib import Path
 
-# ==============================
-# 配置参数 (Optimized for Control -> Treated 1:4)
-# ==============================
-
 # ================== 路径配置 ==================
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-
-# 2. 输入目录: SRTP/data/raw
 IN_DIR = PROJECT_ROOT / "data" / "raw"
-
-# 3. 输出文件: SRTP/data/results/matched_kt3_hint.csv
 OUT_FILE = PROJECT_ROOT / "data" / "results" / "matched_kt3_hint.csv"
-
-# (可选) 确保输出目录存在
 OUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 # ==========================================================
-LIMIT_FILES = 1000   # 扫描文件数，正式跑建议设为 None (跑全量) 或 2000
+LIMIT_FILES = 3000  # 如果想调试只处理部分文件，可以设置这个值为整数
 HINT_WINDOW_MS = 10 * 60 * 1000 # 窗口期
 N_NEIGHBORS = 4      # 反向匹配 1:4 (Control去找4个Treated)
 PS_CALIPER = 0.05    # 卡尺
@@ -165,7 +155,6 @@ def main():
     print(f"   唯一分数数量: {len(unique_scores)} / {len(ps_scores)}")
     
     # 3. 执行反向匹配 (Control -> Treated)
-    # 既然 Treated 很多，我们就拿 Control 去搜 Treated
     print(f"\n3/4 执行反向匹配 (Control -> Treated, 1:{N_NEIGHBORS})...")
     print("   策略: 为每个稀缺的 '未看提示者' 寻找 4 个相似的 '看提示者'")
     
@@ -176,15 +165,12 @@ def main():
     treated_ps_vec = ps_scores[treated_indices].reshape(-1, 1).astype('float32')
     index = faiss.IndexFlatL2(1)
     index.add(treated_ps_vec)
-    
-    # 搜索 (Query = Control, 因为他们人少)
+
     control_ps_vec = ps_scores[control_indices].reshape(-1, 1).astype('float32')
     D, I = index.search(control_ps_vec, N_NEIGHBORS)
 
     print(f"4/4 保存结果至 {OUT_FILE}...")
     with open(OUT_FILE, 'w') as f:
-        # 注意：虽然是反向匹配，但为了分析方便，我们写入时还是按 (treated, control) 的列名格式写
-        # 这样 analysis.py 不需要大改
         f.write("treated_idx,control_idx,ps_t,ps_c,dist,rank,outcome_t,outcome_c\n")
         
         match_count = 0

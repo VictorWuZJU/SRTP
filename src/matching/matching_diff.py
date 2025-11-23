@@ -35,7 +35,7 @@ RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 # ==========================================
 # 2. 核心参数配置
 # ==========================================
-LIMIT_FILES = 1000        # 读取多少个用户文件 (调试时设小，跑全量设为 None)
+LIMIT_FILES = 3000       # 读取多少个用户文件 (调试时设小，跑全量设为 None)
 HINT_WINDOW_MS = 10 * 60 * 1000  # 10分钟内的学习行为算作看提示
 SEARCH_CANDIDATES = 50    # FAISS 初搜寻找 50 个 PS 最近邻
 PS_CALIPER = 0.05         # PS 分数差异容忍度 (能力差异)
@@ -210,7 +210,7 @@ def main():
     matched_pairs = []
     used_treated_indices = set() # 保证 1:1，不重复使用 Treated 样本
     
-    # 遍历每一个 Control 样本寻找它的 Soul Mate
+    # 遍历每一个 Control 样本寻找它hh的 Soul Mate
     for i in range(len(control_indices)):
         c_real_idx = control_indices[i]
         c_diff = DIFF_COL[c_real_idx] # Control 做的题的难度

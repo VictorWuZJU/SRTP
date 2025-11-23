@@ -144,12 +144,21 @@ def main():
     else:
         print("PS 分数太少，跳过分组绘图。")
 
+    # ------------------------------
     print("-" * 30)
-    # 先在外面处理好路径字符串
-    win_path = OUT_DIR.replace('/', '\\')
+    print(f"分析完成！图表已保存至: {OUT_DIR}")
     
-    print(f"全部完成！请在 Windows 文件资源管理器中打开以下路径查看图片:")
-    print(f"\\\\wsl$\\Ubuntu{win_path}")
-
-if __name__ == '__main__':
+    # 生成方便 Windows 访问的路径 (假设是标准的 Ubuntu WSL 发行版)
+    # 将 Linux 路径 /home/username/... 转换为 Windows 路径 \\wsl$\Ubuntu\home\username\...
+    try:
+        # 获取绝对路径字符串
+        abs_path = str(OUT_DIR.resolve())
+        # 1. 先在外面把反斜杠替换好
+        win_path_suffix = abs_path.replace('/', '\\')
+        # 2. 再拼接到 f-string 里
+        win_path = f"\\\\wsl$\\Ubuntu{win_path_suffix}"
+        print(f"Windows 访问路径 (复制到资源管理器): {win_path}")
+    except Exception:
+        pass
+if __name__ == "__main__":
     main()
