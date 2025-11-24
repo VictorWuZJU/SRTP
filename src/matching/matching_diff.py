@@ -29,7 +29,7 @@ QUESTION_FILE = DATA_DIR / "questions.csv"
 DIFF_FILE = PROCESSED_DIR / "question_difficulty.csv"
 OUT_FILE = RESULTS_DIR / "matched_difficulty.csv"
 
-# (可选) 自动创建结果目录，防止报错
+# 创建结果目录，防止报错
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 # ==========================================
 # 2. 核心参数配置
